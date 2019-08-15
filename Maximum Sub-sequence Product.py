@@ -1,41 +1,26 @@
 from sys import stdin
 
-INF = float('inf')
-
-def fill_column(lo,sequence):
-	global memo, ans
-	n = len(sequence)
-	
-
-def solve(sequence):
-	global memo, ans
-	n = len(sequence)
-	memo = [[0 for _ in range(n)] for _ in range(n)]
-	ans = sequence[0]
-	memo[0][0] = sequence[0]
-	if len(sequence) > 1:
-		for i in range(1,n):
-			memo[0][i] = memo[0][i-1]*sequence[i]
-			if memo[0][i] > ans: ans = memo[0][i]
-
-		for lo in range(1,n):
-			if sequence[lo-1] != 0:
-				for hi in range(lo,n):
-					memo[lo][hi] = memo[lo-1][hi]//sequence[lo-1]
-					if memo[lo][hi] > ans: ans = memo[lo][hi]
-			else:
-				memo[lo][lo] = sequence[lo]
-				for i in range(lo+1,n):
-					memo[lo][i] = memo[lo][i-1]*sequence[i]
-					if memo[lo][i] > ans: ans = memo[lo][i]
+def solve(sequence,n):
+	best_product,worst_product,ans = sequence[0],sequence[0],sequence[0]
+	tmp_max,tmp_min = None,None
+	for i in range(1,n):
+		tmp_max,tmp_min = best_product,worst_product 
+		worst_product = min(sequence[i],tmp_max*sequence[i],tmp_min*sequence[i])
+		best_product = max(sequence[i],tmp_max*sequence[i],tmp_min*sequence[i])
+		ans = max(ans,best_product,worst_product)
 	return ans
 
 def main():
 	line = stdin.readline().split()
 	while len(line):
 		sequence = [int(x) for x in line]
+		line = sequence
+		while line[-1] != -999999:
+			line = [int(x) for x in stdin.readline().split()]
+			sequence.extend(line)
 		sequence.pop()
-		ans = solve(sequence)
+		ans = solve(sequence,len(sequence))
 		print(ans)
 		line = stdin.readline().split()
+
 main()
