@@ -1,2 +1,2 @@
 # Uva
-Problemas de Uva
+uVA Judge Online problem's solution. 
